@@ -1,14 +1,37 @@
 // 분석 상태
 export type AnalysisStatus = 'processing' | 'completed' | 'failed'
 
+// 심각도
+export type HighlightSeverity = 'high' | 'medium' | 'low'
+
+// 하이라이트 좌표
+export interface HighlightCoordinates {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+// 이슈 하이라이트
+export interface Highlight {
+  id: number
+  element: string
+  issue: string
+  severity: HighlightSeverity
+  coordinates: HighlightCoordinates
+}
+
 // 분석 데이터
 export interface Analysis {
   id: string
   userId: string
   filePath: string
   userIntent: string
+  imageWidth: number // 원본 이미지 너비
+  imageHeight: number // 원본 이미지 높이
   status: AnalysisStatus
   aiAnalysisResult?: string
+  highlights?: Highlight[]
   createdAt: string
 }
 

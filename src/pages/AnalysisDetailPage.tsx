@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Loader2, Trash2, Download } from 'lucide-react'
+import { ArrowLeft, Loader2, Trash2 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import ImageWithHighlights from '@/components/ImageWithHighlights'
 import { getAnalysis, deleteAnalysis, waitForAnalysisComplete } from '@/api'
 import type { Analysis } from '@/types'
 
@@ -57,7 +58,7 @@ export default function AnalysisDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background dark:bg-dark-background">
         <Loader2 className="h-12 w-12 animate-spin text-indigo-600 mb-4" />
         <p className="text-lg text-gray-600 dark:text-gray-300">
           {analysis?.status === 'processing' ? '분석 중입니다...' : '로딩 중...'}
@@ -68,7 +69,7 @@ export default function AnalysisDetailPage() {
 
   if (error || !analysis) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-background dark:bg-dark-background p-4">
         <Card className="max-w-md w-full">
           <CardContent className="py-16 text-center">
             <p className="text-red-600 dark:text-red-400 mb-6">{error || '분석을 찾을 수 없습니다'}</p>
@@ -82,7 +83,7 @@ export default function AnalysisDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
+    <div className="min-h-screen bg-background dark:bg-dark-background p-4 md:p-8">
       <div className="max-w-5xl mx-auto">
         {/* 헤더 */}
         <div className="mb-8 flex items-center justify-between">
@@ -104,17 +105,22 @@ export default function AnalysisDetailPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* 이미지 */}
+        <div className="grid gap-6 lg:grid-cols-1">
+          {/* 이미지 + 하이라이트 */}
           <Card>
             <CardHeader>
-              <CardTitle>분석 이미지</CardTitle>
+              <CardTitle>분석 이미지 및 이슈</CardTitle>
+              <CardDescription>
+                이미지 위의 박스를 클릭하면 상세한 이슈 내용을 확인할 수 있습니다
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <img
-                src={`http://localhost:8080/${analysis.filePath}`}
-                alt="분석 이미지"
-                className="w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700"
+              <ImageWithHighlights
+                imageUrl={`http://localhost:8080/${analysis.filePath}`}
+                highlights={analysis.highlights}
+                imageAlt="분석 이미지"
+                originalWidth={analysis.imageWidth}
+                originalHeight={analysis.imageHeight}
               />
             </CardContent>
           </Card>

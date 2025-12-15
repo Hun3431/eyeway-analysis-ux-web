@@ -1,1 +1,110 @@
 @import "tailwindcss";
+
+@theme {
+  /* 서비스 색상 팔레트 */
+  --color-primary: #6366f1; /* 인디고 - 시선/분석을 나타내는 메인 색상 */
+  --color-primary-hover: #4f46e5;
+  --color-primary-foreground: #ffffff;
+  
+  --color-secondary: #8b5cf6; /* 보라 - 보조 색상 */
+  --color-secondary-hover: #7c3aed;
+  --color-secondary-foreground: #ffffff;
+  
+  --color-background: #f5f5f5; /* 밝은 회색 배경 */
+  --color-white: #ffffff; /* 카드 배경 */
+  --color-black: #1a1a1a; /* 텍스트 */
+  
+  /* 상태 색상 */
+  --color-success: #10b981; /* 완료 */
+  --color-warning: #f59e0b; /* 처리중 */
+  --color-error: #ef4444; /* 실패/에러 */
+  
+  /* 보더 및 기타 */
+  --color-border: #e5e5e5;
+  --color-input: #e5e5e5;
+  --color-muted: #6b7280;
+  
+  /* 다크모드 */
+  --color-dark-background: #1a1a1a;
+  --color-dark-card: #262626;
+  --color-dark-text: #f5f5f5;
+  --color-dark-border: #404040;
+  
+  --radius: 0.5rem;
+}
+
+/* 기본 스타일 */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-black font-sans antialiased;
+  }
+  
+  /* 다크모드 */
+  .dark body {
+    @apply bg-dark-background text-dark-text;
+  }
+}
+
+/* 유틸리티 클래스 */
+@layer utilities {
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  
+  .bg-primary-hover:hover {
+    background-color: var(--color-primary-hover);
+  }
+  
+  .bg-secondary {
+    background-color: var(--color-secondary);
+  }
+  
+  .bg-background {
+    background-color: var(--color-background);
+  }
+  
+  .bg-white {
+    background-color: var(--color-white);
+  }
+  
+  .bg-card {
+    background-color: var(--color-white);
+  }
+  
+  .text-primary {
+    color: var(--color-primary);
+  }
+  
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+  
+  .text-black {
+    color: var(--color-black);
+  }
+  
+  .text-muted {
+    color: var(--color-muted);
+  }
+  
+  .border-border {
+    border-color: var(--color-border);
+  }
+  
+  /* 다크모드 */
+  .dark .bg-card {
+    background-color: var(--color-dark-card);
+  }
+  
+  .dark .text-black {
+    color: var(--color-dark-text);
+  }
+  
+  .dark .border-border {
+    border-color: var(--color-dark-border);
+  }
+}
