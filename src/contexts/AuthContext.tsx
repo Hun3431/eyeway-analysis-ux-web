@@ -45,13 +45,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(response.user)
   }, [])
 
-  // 회원가입
+  // 회원가입 (자동 로그인 X - 승인 대기)
   const signup = useCallback(async (data: SignupRequest) => {
-    const response: AuthResponse = await authApi.signup(data)
-    
-    localStorage.setItem('accessToken', response.accessToken)
-    localStorage.setItem('user', JSON.stringify(response.user))
-    setUser(response.user)
+    await authApi.signup(data)
+    // 회원가입 성공 후 자동 로그인하지 않음
+    // LoginPage에서 처리하도록 에러를 throw
+    throw new Error('SIGNUP_SUCCESS_PENDING')
   }, [])
 
   // 로그아웃

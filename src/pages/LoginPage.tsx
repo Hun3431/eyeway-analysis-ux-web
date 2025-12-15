@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Eye } from 'lucide-react'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -36,11 +35,36 @@ export default function LoginPage() {
       } else {
         // 로그인
         await login({ email, password })
+        // 로그인 성공 시 분석 페이지로 이동
+        navigate('/analysis')
       }
-      
-      // 성공 시 분석 페이지로 이동
-      navigate('/analysis')
     } catch (err: any) {
+      // 회원가입 성공 (승인 대기) 처리
+      if (err.message === 'SIGNUP_SUCCESS_PENDING') {
+        alert('회원가입이 완료되었습니다.\n관리자 승인 후 로그인이 가능합니다.')
+        // 로그인 모드로 전환
+        setIsSignup(false)
+        setPassword('')
+        setName('')
+        setAge('')
+        return
+      }
+
+      // 로그인 실패 - 승인 대기 상태 체크
+      if (err.response?.status === 401) {
+        const message = err.response.data?.message || ''
+        
+        if (message.includes('승인 대기') || message.includes('승인') || message.includes('approved')) {
+          setError('계정이 아직 승인되지 않았습니다.\n관리자 승인을 기다려주세요.')
+          return
+        }
+        
+        // 일반적인 로그인 실패 (ID/PW 불일치)
+        setError('이메일 또는 비밀번호를 확인해주세요.')
+        return
+      }
+
+      // 기타 에러
       setError(err.response?.data?.message || err.message || '오류가 발생했습니다')
     } finally {
       setIsLoading(false)
@@ -60,8 +84,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background dark:bg-dark-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-2">
-            <Eye className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+          <div className="flex items-center justify-center mb-4">
+            <img src="/logo.png" alt="EyeWay Logo" className="h-16 w-16 rounded-xl shadow-lg" />
           </div>
           <CardTitle className="text-2xl text-center">
             {isSignup ? '회원가입' : '로그인'}

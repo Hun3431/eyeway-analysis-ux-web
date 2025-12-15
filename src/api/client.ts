@@ -30,15 +30,30 @@ apiClient.interceptors.request.use(
 // 응답 인터셉터: 에러 처리
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
-    // 401 에러 시 토큰 제거 및 로그인 페이지로 리다이렉트
+  (error: AxiosError<{ message?: string }>) => {
+    // 401 에러 처리
     if (error.response?.status === 401) {
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('user')
+      const message = error.response.data?.message || ''
       
-      // 로그인 페이지가 아닌 경우에만 리다이렉트
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
+      // 승인 대기 상태 체크
+      if (message.includes('승인 대기') || message.includes('승인') || message.includes('approved')) {
+        // 승인 대기 상태인 경우 - 알림 표시 후 로그아웃 처리
+        if (window.location.pathname !== '/login') {
+          alert('계정이 아직 승인되지 않았습니다.\n관리자 승인을 기다려주세요.')
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('user')
+          window.location.href = '/login'
+        }
+      } else {
+        // 일반적인 인증 실패 (토큰 만료 등)
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
+        
+        // 로그인 페이지가 아닌 경우에만 리다이렉트
+        if (window.location.pathname !== '/login') {
+          alert('로그인이 만료되었습니다.')
+          window.location.href = '/login'
+        }
       }
     }
     
