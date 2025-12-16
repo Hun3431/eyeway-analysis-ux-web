@@ -116,7 +116,7 @@ export default function AnalysisDetailPage() {
             </CardHeader>
             <CardContent>
               <ImageWithHighlights
-                imageUrl={`http://localhost:8080/${analysis.filePath}`}
+                imageUrl={`${import.meta.env.VITE_API_BASE_URL}/${analysis.filePath}`}
                 highlights={analysis.highlights}
                 imageAlt="분석 이미지"
                 originalWidth={analysis.imageWidth}
